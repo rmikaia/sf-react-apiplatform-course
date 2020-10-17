@@ -2,11 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\InvoiceRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
+ * @ApiResource(
+ *   subresourceOperations={
+ *     "api_customers_invoices_get_subresource"={"groups"={"invoices_subresource_read"}}
+ *   },
+ *   attributes={
+ *     "pagination_enabled"=true,
+ *     "order"={"amount"="desc"}
+ *   },
+ *   normalizationContext={"groups"={"invoices_read"}},
+ *   denormalizationContext={"disable_type_enforcement"=true}
+ * )
  */
 class Invoice
 {
@@ -14,32 +30,46 @@ class Invoice
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"invoices_read", "customers_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource_read"})
+     * @Assert\Type(type="numeric", message="Le montant doit être au format numérique")
+     * @Assert\NotBlank(message="Le montant ne doit pas être vide")
      */
     private $amount;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"invoices_read", "customers_read"})
+     * @Assert\NotBlank(message="La date ne doit pas être vide")
      */
     private $sentAt;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"invoices_read", "customers_read"})
+     * @Assert\Choice(choices={"SENT", "PAID", "CANCELLED"}, message="La valeur doit être parmi: SENT, PAID, CANCELLED")
+     * @Assert\NotBlank(message="Le status ne doit pas être vide")
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"invoices_read"})
+     * @Assert\NotBlank(message="Une facture doit avoir un client")
      */
     private $customer;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"invoices_read"})
+     * @Assert\Type(type="integer", message="Le chrono doit être un nombre entier")
+     * @Assert\NotBlank(message="Il faut un chrono")
      */
     private $chrono;
 
@@ -53,7 +83,7 @@ class Invoice
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount($amount): self
     {
         $this->amount = $amount;
 
@@ -101,10 +131,22 @@ class Invoice
         return $this->chrono;
     }
 
-    public function setChrono(int $chrono): self
+    public function setChrono($chrono): self
     {
         $this->chrono = $chrono;
 
         return $this;
+    }
+
+    /**
+     * Expose User directly in invoice
+     * 
+     * @Groups({"invoices_read"})
+     *
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->customer->getUser();
     }
 }
