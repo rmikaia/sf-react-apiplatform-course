@@ -14,7 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *   normalizationContext={
+ *     "groups": {"users_read"}
+ *   }
+ * )
  * @UniqueEntity("email", message="Un utilisateur ayant cette adresse mail existe déjà")
  */
 class User implements UserInterface
@@ -32,6 +36,7 @@ class User implements UserInterface
      * @Groups({"customers_read", "invoices_read"})
      * @Assert\Email(message="Le format de votre adresse mail n'est pas valide")
      * @Assert\NotBlank(message="Le mail ne doit pas être vide")
+     * @Groups({"users_read"})
      */
     private $email;
 
@@ -52,6 +57,7 @@ class User implements UserInterface
      * @Groups({"customers_read", "invoices_read"})
      * @Assert\Length(min=3, minMessage="Le nom doit faire entre 3 et 255 caractères", max=255, maxMessage="Le nom doit faire entre 3 et 255 caractères")
      * @Assert\NotBlank(message="Le prénom est obligatoire")
+     * @Groups({"users_read"})
      */
     private $firstName;
 
@@ -60,6 +66,7 @@ class User implements UserInterface
      * @Groups({"customers_read", "invoices_read"})
      * @Assert\Length(min=3, minMessage="Le nom doit faire entre 3 et 255 caractères", max=255, maxMessage="Le nom doit faire entre 3 et 255 caractères")
      * @Assert\NotBlank(message="Le nom est obligatoire")
+     * @Groups({"users_read"})
      */
     private $lastName;
 
