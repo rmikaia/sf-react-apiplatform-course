@@ -1,5 +1,6 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import { API_URL } from "../configs/env";
 
 const encryptedBy = "Bearer";
 
@@ -37,31 +38,24 @@ const logout = () => {
 };
 
 const auth = (credentials) =>
-  axios
-    .post("http://localhost:8000/api/login_check", credentials)
-    .then(({ data }) => {
-      window.localStorage.setItem("authToken", data.token);
-      setAuthHeader(data.token);
-    });
+  axios.post(`${API_URL}login_check`, credentials).then(({ data }) => {
+    window.localStorage.setItem("authToken", data.token);
+    setAuthHeader(data.token);
+  });
 
-const post = (entity, data) =>
-  axios.post(`http://localhost:8000/api/${entity}`, data);
+const post = (entity, data) => axios.post(`${API_URL}${entity}`, data);
 
-const put = (entity, id, data) =>
-  axios.put(`http://localhost:8000/api/${entity}/${id}`, data);
+const put = (entity, id, data) => axios.put(`${API_URL}${entity}/${id}`, data);
 
 const fetch = (entity) =>
   axios
-    .get(`http://localhost:8000/api/${entity}`)
+    .get(`${API_URL}${entity}`)
     .then((response) => response.data["hydra:member"]);
 
 const get = (entity, id) =>
-  axios
-    .get(`http://localhost:8000/api/${entity}/${id}`)
-    .then((response) => response.data);
+  axios.get(`${API_URL}${entity}/${id}`).then((response) => response.data);
 
-const deleteItem = (entity, id) =>
-  axios.delete(`http://localhost:8000/api/${entity}/${id}`);
+const deleteItem = (entity, id) => axios.delete(`${API_URL}${entity}/${id}`);
 
 export default {
   auth,
