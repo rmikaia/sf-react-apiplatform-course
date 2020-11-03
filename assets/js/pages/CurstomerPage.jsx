@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
+import FormLoader from "../components/Loaders/FormLoader";
 import api from "../services/api";
+import { getCreateSuccess, getEditSuccess } from "../services/notification";
 
 const CustomerPage = ({ history, match }) => {
   const entity = "customers";
@@ -25,6 +28,7 @@ const CustomerPage = ({ history, match }) => {
 
   const [customer, setCustomer] = useState({ ...customerState });
   const [errors, setErrors] = useState({ ...errorsState });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
@@ -33,10 +37,16 @@ const CustomerPage = ({ history, match }) => {
 
   useEffect(() => {
     if (isEditing) {
-      api.get(entity, id).then((response) => {
-        const { firstName, lastName, email, company } = response;
-        setCustomer({ firstName, lastName, email, company });
-      });
+      setLoading(true);
+
+      api
+        .get(entity, id)
+        .then((response) => {
+          const { firstName, lastName, email, company } = response;
+          setCustomer({ firstName, lastName, email, company });
+          setLoading(false);
+        })
+        .catch(() => toast.error(getGenericError()));
     }
   }, [id, isEditing]);
 
@@ -55,10 +65,18 @@ const CustomerPage = ({ history, match }) => {
       .then((response) => {
         setCustomer({ ...customerState });
         setErrors({ ...errorsState });
+
+        const subject = "Le client";
+        toast.success(
+          isEditing ? getEditSuccess(subject) : getCreateSuccess(subject)
+        );
+
         history.push("/customers");
       })
       .catch((error) => {
         const violations = error.response.data.violations;
+
+        toast.error(getGenericError());
 
         if (violations) {
           let apiErrors = { ...errorsState };
@@ -75,43 +93,46 @@ const CustomerPage = ({ history, match }) => {
   return (
     <>
       <h1>{isEditing ? "Modification de client" : "Création de client"}</h1>
-      <form>
-        <Field
-          name="firstName"
-          label="Prénom"
-          error={errors.firstName}
-          value={customer.firstName}
-          onChange={handleChange}
-        />
-        <Field
-          name="lastName"
-          label="Nom"
-          error={errors.lastName}
-          value={customer.lastName}
-          onChange={handleChange}
-        />
-        <Field
-          name="email"
-          label="Email"
-          error={errors.email}
-          value={customer.email}
-          onChange={handleChange}
-          type="email"
-        />
-        <Field
-          name="company"
-          label="Entreprise"
-          error={errors.company}
-          value={customer.company}
-          onChange={handleChange}
-        />
-        <div className="form-group">
-          <Button onClick={handleSubmit} />
-          <Link to="/customers" className="btn btn-link">
-            Retour à la liste
-          </Link>
-        </div>
-      </form>
+      {!loading && (
+        <form>
+          <Field
+            name="firstName"
+            label="Prénom"
+            error={errors.firstName}
+            value={customer.firstName}
+            onChange={handleChange}
+          />
+          <Field
+            name="lastName"
+            label="Nom"
+            error={errors.lastName}
+            value={customer.lastName}
+            onChange={handleChange}
+          />
+          <Field
+            name="email"
+            label="Email"
+            error={errors.email}
+            value={customer.email}
+            onChange={handleChange}
+            type="email"
+          />
+          <Field
+            name="company"
+            label="Entreprise"
+            error={errors.company}
+            value={customer.company}
+            onChange={handleChange}
+          />
+          <div className="form-group">
+            <Button onClick={handleSubmit} />
+            <Link to="/customers" className="btn btn-link">
+              Retour à la liste
+            </Link>
+          </div>
+        </form>
+      )}
+      {loading && <FormLoader />}
     </>
   );
 };

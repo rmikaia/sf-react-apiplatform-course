@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
 import api from "../services/api";
+import { getGenericError } from "../services/notification";
 
 const RegisterPage = ({ history, match }) => {
   const entity = "users";
@@ -48,6 +50,10 @@ const RegisterPage = ({ history, match }) => {
       .then((response) => {
         setUser({ ...userState });
         setErrors({ ...errorsState });
+        toast.success(
+          "Votre compte a été crée, vous pouvez vous connecter désormais"
+        );
+
         history.push("/login");
       })
       .catch((error) => {
@@ -58,6 +64,7 @@ const RegisterPage = ({ history, match }) => {
             apiErrors = { ...apiErrors, [propertyPath]: message };
           });
 
+          toast.error(getGenericError());
           setErrors(apiErrors);
         }
       });

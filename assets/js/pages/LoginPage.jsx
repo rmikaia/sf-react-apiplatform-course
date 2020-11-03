@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
 import AuthContext from "../contexts/AuthContext";
 import api from "../services/api";
+import { getGenericError } from "../services/notification";
 
 const LoginPage = ({ history }) => {
   const { setIsAuthenticated } = useContext(AuthContext);
@@ -27,11 +29,12 @@ const LoginPage = ({ history }) => {
         setError("");
         setIsAuthenticated(true);
         console.log(history);
+        toast.success("Vous êtes maintenant connecté");
+
         history.replace("/customers");
-        console.log(history);
       })
       .catch((error) => {
-        console.log(error);
+        toast.error(getGenericError());
         setError("Votre login ou mot de passe est erroné");
       });
   };

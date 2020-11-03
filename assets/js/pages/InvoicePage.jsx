@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
 import Select from "../components/Form/Select";
+import FormLoader from "../components/Loaders/FormLoader";
 import api from "../services/api";
+import {
+  getCreateSuccess,
+  getEditSuccess,
+  getGenericError,
+} from "../services/notification";
 
 const InvoicePage = ({ history, match }) => {
   const entity = "invoices";
@@ -27,6 +34,7 @@ const InvoicePage = ({ history, match }) => {
   const [invoice, setInvoice] = useState({ ...invoiceState });
   const [errors, setErrors] = useState({ ...errorsState });
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
@@ -35,10 +43,15 @@ const InvoicePage = ({ history, match }) => {
 
   useEffect(() => {
     if (isEditing) {
-      api.get(entity, id).then((response) => {
-        const { amount, status, customer } = response;
-        setInvoice({ amount, status, customer: customer.id });
-      });
+      setLoading(true);
+      api
+        .get(entity, id)
+        .then((response) => {
+          const { amount, status, customer } = response;
+          setInvoice({ amount, status, customer: customer.id });
+          setLoading(false);
+        })
+        .catch(() => toast.error(getGenericError()));
     }
 
     api
@@ -49,7 +62,7 @@ const InvoicePage = ({ history, match }) => {
           setInvoice({ ...invoice, customer: response[0] && response[0].id });
         }
       })
-      .catch((error) => {});
+      .catch(() => toast.error(getGenericError()));
   }, [id, isEditing]);
 
   const handleSubmit = (event) => {
@@ -69,13 +82,21 @@ const InvoicePage = ({ history, match }) => {
     }
 
     apiResponse
-      .then((response) => {
+      .then(() => {
         setInvoice({ ...invoiceState });
         setErrors({ ...errorsState });
+
+        const subject = "La facture";
+        toast.success(
+          isEditing ? getEditSuccess(subject) : getCreateSuccess(subject)
+        );
+
         history.push("/invoices");
       })
       .catch((error) => {
         const violations = error.response.data.violations;
+
+        toast.error(getGenericError());
 
         if (violations) {
           let apiErrors = { ...errorsState };
@@ -92,46 +113,49 @@ const InvoicePage = ({ history, match }) => {
   return (
     <>
       <h1>{isEditing ? "Modification de facture" : "Création de facture"}</h1>
-      <form>
-        <Field
-          name="amount"
-          label="Montant"
-          type="number"
-          error={errors.amount}
-          value={invoice.amount}
-          onChange={handleChange}
-        />
-        <Select
-          name="customer"
-          label="Client"
-          error={errors.customer}
-          value={invoice.customer}
-          onChange={handleChange}
-        >
-          {customers.map((customer) => (
-            <option key={customer.id} value={customer.id}>
-              {customer.firstName} {customer.lastName}
-            </option>
-          ))}
-        </Select>
-        <Select
-          name="status"
-          label="Status"
-          error={errors.status}
-          value={invoice.status}
-          onChange={handleChange}
-        >
-          <option value="PAID">Payé</option>
-          <option value="SENT">Envoyé</option>
-          <option value="CANCELLED">Annulé</option>
-        </Select>
-        <div className="form-group">
-          <Button onClick={handleSubmit} />
-          <Link to="/invoices" className="btn btn-link">
-            Retour à la liste
-          </Link>
-        </div>
-      </form>
+      {!loading && (
+        <form>
+          <Field
+            name="amount"
+            label="Montant"
+            type="number"
+            error={errors.amount}
+            value={invoice.amount}
+            onChange={handleChange}
+          />
+          <Select
+            name="customer"
+            label="Client"
+            error={errors.customer}
+            value={invoice.customer}
+            onChange={handleChange}
+          >
+            {customers.map((customer) => (
+              <option key={customer.id} value={customer.id}>
+                {customer.firstName} {customer.lastName}
+              </option>
+            ))}
+          </Select>
+          <Select
+            name="status"
+            label="Status"
+            error={errors.status}
+            value={invoice.status}
+            onChange={handleChange}
+          >
+            <option value="PAID">Payé</option>
+            <option value="SENT">Envoyé</option>
+            <option value="CANCELLED">Annulé</option>
+          </Select>
+          <div className="form-group">
+            <Button onClick={handleSubmit} />
+            <Link to="/invoices" className="btn btn-link">
+              Retour à la liste
+            </Link>
+          </div>
+        </form>
+      )}
+      {loading && <FormLoader />}
     </>
   );
 };
