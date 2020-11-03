@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import api from "../services/api";
 
@@ -48,7 +49,13 @@ const CustomersPage = () => {
 
   return (
     <>
-      <h1>Liste des clients</h1>
+      <div className="mb-3 d-flex justify-content-between align-items-center">
+        <h1>Liste des clients</h1>
+        <Link to="/customers/new" className="btn btn-primary">
+          Créer un client
+        </Link>
+      </div>
+
       <input
         onChange={handleSearch}
         type="text"
@@ -72,9 +79,9 @@ const CustomersPage = () => {
             <tr key={customer.id}>
               <td>{customer.id}</td>
               <td>
-                <a href="#">
+                <Link to={`/customers/${customer.id}`}>
                   {customer.firstName} {customer.lastName}
-                </a>
+                </Link>
               </td>
               <td>{customer.email}</td>
               <td>{customer.company}</td>

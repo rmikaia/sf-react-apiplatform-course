@@ -1,4 +1,6 @@
 import React, { useContext, useState } from "react";
+import Button from "../components/Form/Button";
+import Field from "../components/Form/Field";
 import AuthContext from "../contexts/AuthContext";
 import api from "../services/api";
 
@@ -38,39 +40,23 @@ const LoginPage = ({ history }) => {
     <>
       <h1>Connexion</h1>
       <form>
+        <Field
+          type="email"
+          label="Adresse email"
+          name="username"
+          value={credentials.username}
+          error={error}
+          onChange={handleChange}
+        />
+        <Field
+          type="password"
+          label="Mot de passe"
+          name="password"
+          value={credentials.password}
+          onChange={handleChange}
+        />
         <div className="form-group">
-          <label htmlFor="username">Email</label>
-          <input
-            type="email"
-            name="username"
-            id="username"
-            placeholder="Saisir votre adresse email"
-            className={"form-control" + (error && " is-invalid")}
-            value={credentials.username}
-            onChange={handleChange}
-          />
-          {error && <p className="invalid-feedback">{error}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Mot de passe</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Saisir votre mot de passe"
-            className="form-control"
-            value={credentials.password}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <button
-            type="submit"
-            className="btn btn-success"
-            onClick={handleSubmit}
-          >
-            Valider
-          </button>
+          <Button onClick={handleSubmit} />
         </div>
       </form>
     </>

@@ -44,10 +44,21 @@ const auth = (credentials) =>
       setAuthHeader(data.token);
     });
 
+const post = (entity, data) =>
+  axios.post(`http://localhost:8000/api/${entity}`, data);
+
+const put = (entity, id, data) =>
+  axios.put(`http://localhost:8000/api/${entity}/${id}`, data);
+
 const fetch = (entity) =>
   axios
     .get(`http://localhost:8000/api/${entity}`)
     .then((response) => response.data["hydra:member"]);
+
+const get = (entity, id) =>
+  axios
+    .get(`http://localhost:8000/api/${entity}/${id}`)
+    .then((response) => response.data);
 
 const deleteItem = (entity, id) =>
   axios.delete(`http://localhost:8000/api/${entity}/${id}`);
@@ -56,7 +67,10 @@ export default {
   auth,
   delete: deleteItem,
   fetch,
+  get,
   isAuthenticated,
   logout,
+  post,
+  put,
   setup,
 };

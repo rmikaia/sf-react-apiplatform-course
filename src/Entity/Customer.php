@@ -19,6 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *   subresourceOperations={
  *     "invoices_get_subresource"={"groups"={"invoices_subresource_read"}}
  *   },
+ *   attributes={
+ *     "order"={"id"="desc"}
+ *   },
  *   normalizationContext={"groups":{"customers_read"}}
  * )
  * @ApiFilter(SearchFilter::class, properties={"lastName":"partial", "firstName":"partial"})

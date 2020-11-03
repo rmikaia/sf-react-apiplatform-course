@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import api from "../services/api";
 import { formatDate } from "../services/date";
@@ -62,7 +63,12 @@ const InvoicesPage = () => {
 
   return (
     <>
-      <h1>Liste des factures</h1>
+      <div className="mb-3 d-flex justify-content-between align-items-center">
+        <h1>Liste des factures</h1>
+        <Link to="/invoices/new" className="btn btn-primary">
+          Créer une facture
+        </Link>
+      </div>
       <input
         onChange={handleSearch}
         type="text"
@@ -85,12 +91,14 @@ const InvoicesPage = () => {
         <tbody>
           {paginatedInvoices.map((invoice) => (
             <tr key={invoice.id}>
-              <td>{invoice.id}</td>
+              <td>
+                <Link to={`/invoices/${invoice.id}`}>{invoice.id}</Link>
+              </td>
               <td>{invoice.chrono}</td>
               <td>
-                <a href="#">
+                <Link to={`/customers/${invoice.customer.id}`}>
                   {invoice.customer.firstName} {invoice.customer.lastName}
-                </a>
+                </Link>
               </td>
               <td>{formatDate(invoice.sentAt)}</td>
               <td className="text-center">
@@ -104,7 +112,12 @@ const InvoicesPage = () => {
                 {invoice.amount.toLocaleString()} €
               </td>
               <td>
-                <button className="btn btn-sm btn-primary">Editer</button>
+                <Link
+                  to={`/invoices/${invoice.id}`}
+                  className="btn btn-sm btn-primary"
+                >
+                  Editer
+                </Link>
               </td>
               <td>
                 <button
