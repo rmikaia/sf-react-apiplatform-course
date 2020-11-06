@@ -1,5 +1,14 @@
 import React from "react";
 
+/**
+ *
+ * @param {{
+ *   currentPage: number;
+ *   handlePageChange: (currentPage: number) => void;
+ *   itemsPerPage : number;
+ *   totalItems: number;
+ * }} args
+ */
 const Pagination = ({
   totalItems,
   itemsPerPage,
@@ -59,6 +68,12 @@ const Pagination = ({
   );
 };
 
+/**
+ * @param {array} items
+ * @param {number} currentPage
+ * @param {number} itemsPerPage
+ * @returns {array}
+ */
 Pagination.getData = (items, currentPage, itemsPerPage) => {
   const start = currentPage * itemsPerPage - itemsPerPage;
   return items.slice(start, start + itemsPerPage);

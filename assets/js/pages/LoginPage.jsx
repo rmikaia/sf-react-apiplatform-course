@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
+import ROUTES from "../constantes/routes";
 import AuthContext from "../contexts/AuthContext";
 import api from "../services/api";
 import { getGenericError } from "../services/notification";
@@ -15,6 +16,7 @@ const LoginPage = ({ history }) => {
 
   const [error, setError] = useState("");
 
+  /** @param {{currentTarget: HTMLInputElement}} args */
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
     setCredentials({ ...credentials, [name]: value });
@@ -31,7 +33,7 @@ const LoginPage = ({ history }) => {
         console.log(history);
         toast.success("Vous êtes maintenant connecté");
 
-        history.replace("/customers");
+        history.replace(ROUTES.CUSTOMERS);
       })
       .catch((error) => {
         toast.error(getGenericError());

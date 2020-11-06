@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
+import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import { getGenericError } from "../services/notification";
 
@@ -54,7 +55,7 @@ const RegisterPage = ({ history, match }) => {
           "Votre compte a été crée, vous pouvez vous connecter désormais"
         );
 
-        history.push("/login");
+        history.push(ROUTES.LOGIN);
       })
       .catch((error) => {
         const violations = error.response.data.violations;
@@ -114,7 +115,7 @@ const RegisterPage = ({ history, match }) => {
         />
         <div className="form-group">
           <Button onClick={handleSubmit} />
-          <Link to="/login" className="btn btn-link">
+          <Link to={ROUTES.LOGIN} className="btn btn-link">
             Vous avez déjà un compte
           </Link>
         </div>

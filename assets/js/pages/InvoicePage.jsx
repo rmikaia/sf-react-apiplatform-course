@@ -5,6 +5,7 @@ import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
 import Select from "../components/Form/Select";
 import FormLoader from "../components/Loaders/FormLoader";
+import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import {
   getCreateSuccess,
@@ -36,6 +37,7 @@ const InvoicePage = ({ history, match }) => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  /** @param {{currentTarget: HTMLSelectElement}} args */
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
     setInvoice({ ...invoice, [name]: value });
@@ -65,6 +67,7 @@ const InvoicePage = ({ history, match }) => {
       .catch(() => toast.error(getGenericError()));
   }, [id, isEditing]);
 
+  /** @param {React.MouseEvent} event */
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -91,7 +94,7 @@ const InvoicePage = ({ history, match }) => {
           isEditing ? getEditSuccess(subject) : getCreateSuccess(subject)
         );
 
-        history.push("/invoices");
+        history.push(ROUTES.INVOICES);
       })
       .catch((error) => {
         const violations = error.response.data.violations;
@@ -149,7 +152,7 @@ const InvoicePage = ({ history, match }) => {
           </Select>
           <div className="form-group">
             <Button onClick={handleSubmit} />
-            <Link to="/invoices" className="btn btn-link">
+            <Link to={ROUTES.INVOICES} className="btn btn-link">
               Retour à la liste
             </Link>
           </div>

@@ -1,13 +1,24 @@
 import React from "react";
 
+/**
+ * @param {{
+ *   label: string,
+ *   name: string,
+ *   onChange: ({currentTarget: HTMLInputElement}) => void,
+ *   value: string,
+ *   error?: string,
+ *   placeholder?: string,
+ *   type?: InputType,
+ * }} args
+ */
 const Field = ({
-  name,
   label,
-  value,
+  name,
   onChange,
-  type = "text",
-  placeholder = "",
+  value,
   error = "",
+  placeholder = "",
+  type = "text",
 }) => {
   return (
     <div className="form-group">

@@ -1,5 +1,15 @@
 import React from "react";
 
+/**
+ * @param {{
+ *   name: string
+ *   label: string,
+ *   value: string,
+ *   onChange: ({ currentTarget: HTMLSelectElement }) => void,
+ *   children: any,
+ *   error?: string,
+ * }} args
+ */
 const Select = ({ name, label, value, onChange, children, error = "" }) => {
   return (
     <div className="form-group">

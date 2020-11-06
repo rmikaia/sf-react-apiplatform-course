@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+// @ts-ignore
 import * as authorImage from "../../images/mika.png";
+import ROUTES from "../constantes/routes";
 
 const HomePage = () => {
   return (
@@ -14,7 +16,7 @@ const HomePage = () => {
         <hr className="my-4" />
         <p>Pour commencer, vous pouvez déjà créer un compte.</p>
         <p className="lead">
-          <Link className="btn btn-primary btn-lg" to="/register">
+          <Link className="btn btn-primary btn-lg" to={ROUTES.REGISTER}>
             C'est ici
           </Link>
         </p>

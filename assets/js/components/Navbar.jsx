@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+import ROUTES from "../constantes/routes";
 import AuthContext from "../contexts/AuthContext";
 import api from "../services/api";
 
@@ -11,7 +12,7 @@ const Navbar = ({ history }) => {
     api.logout();
     setIsAuthenticated(false);
     toast.success("Vous êtes déconnecté, à bientôt!");
-    history.push("/login");
+    history.push(ROUTES.LOGIN);
   };
 
   return (
@@ -35,12 +36,12 @@ const Navbar = ({ history }) => {
         {isAuthenticated && (
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <NavLink className="nav-link" to="/customers">
+              <NavLink className="nav-link" to={ROUTES.CUSTOMERS}>
                 Clients
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/invoices">
+              <NavLink className="nav-link" to={ROUTES.INVOICES}>
                 Factures
               </NavLink>
             </li>
@@ -50,12 +51,12 @@ const Navbar = ({ history }) => {
           {(!isAuthenticated && (
             <>
               <li className="nat-item">
-                <NavLink className="nav-link" to="/register">
+                <NavLink className="nav-link" to={ROUTES.REGISTER}>
                   Inscription
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="btn btn-success" to="/login">
+                <NavLink className="btn btn-success" to={ROUTES.LOGIN}>
                   Connexion
                 </NavLink>
               </li>

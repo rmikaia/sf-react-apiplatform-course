@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import TableLoader from "../components/Loaders/TableLoader";
 import Pagination from "../components/Pagination";
+import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import { getDeleteSuccess, getGenericError } from "../services/notification";
 
@@ -24,6 +25,7 @@ const CustomersPage = () => {
       .catch(() => toast.error(getGenericError()));
   }, []);
 
+  /** @param {number} customerId */
   const handleDelete = (customerId) => {
     const oldCustomers = [...customers];
 
@@ -37,12 +39,14 @@ const CustomersPage = () => {
       });
   };
 
+  /** @param {number} currentPage */
   const handlePageChange = (currentPage) => {
     setCurrentPage(currentPage);
   };
 
-  const handleSearch = ({ target }) => {
-    setSearch(target.value.toLowerCase());
+  /** @param {{currentTarget: HTMLInputElement}} args */
+  const handleSearch = ({ currentTarget }) => {
+    setSearch(currentTarget.value.toLowerCase());
     setCurrentPage(1);
   };
 
@@ -64,7 +68,7 @@ const CustomersPage = () => {
     <>
       <div className="mb-3 d-flex justify-content-between align-items-center">
         <h1>Liste des clients</h1>
-        <Link to="/customers/new" className="btn btn-primary">
+        <Link to={ROUTES.CUSTOMERS_NEW} className="btn btn-primary">
           Créer un client
         </Link>
       </div>
@@ -94,7 +98,7 @@ const CustomersPage = () => {
               <tr key={customer.id}>
                 <td>{customer.id}</td>
                 <td>
-                  <Link to={`/customers/${customer.id}`}>
+                  <Link to={`${ROUTES.CUSTOMERS}/${customer.id}`}>
                     {customer.firstName} {customer.lastName}
                   </Link>
                 </td>
@@ -112,7 +116,7 @@ const CustomersPage = () => {
                   <button
                     onClick={() => handleDelete(customer.id)}
                     className="btn btn-sm btn-danger"
-                    disabled={customer.invoices.length > 0 ? true : false}
+                    disabled={customer.invoices.length > 0}
                   >
                     Supprimer
                   </button>

@@ -4,8 +4,13 @@ import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
 import FormLoader from "../components/Loaders/FormLoader";
+import ROUTES from "../constantes/routes";
 import api from "../services/api";
-import { getCreateSuccess, getEditSuccess } from "../services/notification";
+import {
+  getCreateSuccess,
+  getEditSuccess,
+  getGenericError,
+} from "../services/notification";
 
 const CustomerPage = ({ history, match }) => {
   const entity = "customers";
@@ -30,6 +35,7 @@ const CustomerPage = ({ history, match }) => {
   const [errors, setErrors] = useState({ ...errorsState });
   const [loading, setLoading] = useState(false);
 
+  /** @param {{currentTarget: HTMLInputElement}} args */
   const handleChange = ({ currentTarget }) => {
     const { name, value } = currentTarget;
     setCustomer({ ...customer, [name]: value });
@@ -50,6 +56,7 @@ const CustomerPage = ({ history, match }) => {
     }
   }, [id, isEditing]);
 
+  /** @param {React.MouseEvent} event */
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -71,7 +78,7 @@ const CustomerPage = ({ history, match }) => {
           isEditing ? getEditSuccess(subject) : getCreateSuccess(subject)
         );
 
-        history.push("/customers");
+        history.push(ROUTES.CUSTOMERS);
       })
       .catch((error) => {
         const violations = error.response.data.violations;
@@ -126,7 +133,7 @@ const CustomerPage = ({ history, match }) => {
           />
           <div className="form-group">
             <Button onClick={handleSubmit} />
-            <Link to="/customers" className="btn btn-link">
+            <Link to={ROUTES.CUSTOMERS} className="btn btn-link">
               Retour à la liste
             </Link>
           </div>

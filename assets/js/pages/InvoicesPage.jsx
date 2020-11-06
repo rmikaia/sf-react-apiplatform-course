@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import TableLoader from "../components/Loaders/TableLoader";
 import Pagination from "../components/Pagination";
+import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import { formatDate } from "../services/date";
 import { getDeleteSuccess, getGenericError } from "../services/notification";
@@ -78,7 +79,7 @@ const InvoicesPage = () => {
     <>
       <div className="mb-3 d-flex justify-content-between align-items-center">
         <h1>Liste des factures</h1>
-        <Link to="/invoices/new" className="btn btn-primary">
+        <Link to={ROUTES.INVOICES_NEW} className="btn btn-primary">
           Créer une facture
         </Link>
       </div>
@@ -127,7 +128,7 @@ const InvoicesPage = () => {
                 </td>
                 <td>
                   <Link
-                    to={`/invoices/${invoice.id}`}
+                    to={`${ROUTES.INVOICES}/${invoice.id}`}
                     className="btn btn-sm btn-primary"
                   >
                     Editer
