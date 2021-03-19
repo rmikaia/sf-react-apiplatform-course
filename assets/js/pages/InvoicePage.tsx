@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
@@ -12,21 +12,26 @@ import {
   getEditSuccess,
   getGenericError,
 } from "../services/notification";
+import { Customer } from "../types/customer";
+import { Invoice, InvoiceState } from "../types/invoice";
 
-const InvoicePage = ({ history, match }) => {
+const InvoicePage: React.FC<RouteComponentProps<{ id: string }>> = ({
+  history,
+  match,
+}) => {
   const entity = "invoices";
   const entityCustomers = "customers";
 
   const id = match.params.id;
   const isEditing = !isNaN(+id);
 
-  const invoiceState = {
+  const invoiceState: Partial<InvoiceState> = {
     amount: "",
     status: "SENT",
     customer: "",
   };
 
-  const errorsState = {
+  const errorsState: Partial<InvoiceState> = {
     amount: "",
     status: "",
     customer: "",
@@ -34,11 +39,14 @@ const InvoicePage = ({ history, match }) => {
 
   const [invoice, setInvoice] = useState({ ...invoiceState });
   const [errors, setErrors] = useState({ ...errorsState });
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(false);
 
-  /** @param {{currentTarget: HTMLSelectElement}} args */
-  const handleChange = ({ currentTarget }) => {
+  const handleChange = ({
+    currentTarget,
+  }: {
+    currentTarget: HTMLInputElement | HTMLSelectElement;
+  }) => {
     const { name, value } = currentTarget;
     setInvoice({ ...invoice, [name]: value });
   };
@@ -67,8 +75,7 @@ const InvoicePage = ({ history, match }) => {
       .catch(() => toast.error(getGenericError()));
   }, [id, isEditing]);
 
-  /** @param {React.MouseEvent} event */
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.MouseEvent) => {
     event.preventDefault();
 
     let apiResponse;
@@ -104,9 +111,17 @@ const InvoicePage = ({ history, match }) => {
         if (violations) {
           let apiErrors = { ...errorsState };
 
-          violations.forEach(({ propertyPath, message }) => {
-            apiErrors = { ...apiErrors, [propertyPath]: message };
-          });
+          violations.forEach(
+            ({
+              propertyPath,
+              message,
+            }: {
+              propertyPath: string;
+              message: string;
+            }) => {
+              apiErrors = { ...apiErrors, [propertyPath]: message };
+            }
+          );
 
           setErrors(apiErrors);
         }
@@ -123,14 +138,14 @@ const InvoicePage = ({ history, match }) => {
             label="Montant"
             type="number"
             error={errors.amount}
-            value={invoice.amount}
+            value={invoice.amount!}
             onChange={handleChange}
           />
           <Select
             name="customer"
             label="Client"
             error={errors.customer}
-            value={invoice.customer}
+            value={invoice.customer!}
             onChange={handleChange}
           >
             {customers.map((customer) => (
@@ -143,7 +158,7 @@ const InvoicePage = ({ history, match }) => {
             name="status"
             label="Status"
             error={errors.status}
-            value={invoice.status}
+            value={invoice.status!}
             onChange={handleChange}
           >
             <option value="PAID">Payé</option>

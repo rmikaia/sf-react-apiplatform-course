@@ -2,14 +2,10 @@ import React, { useContext } from "react";
 import { Redirect, Route } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
 
-/**
- *
- * @param {{
- *   path: string;
- *   component: React.FunctionComponent;
- * }} args
- */
-const PrivateRoute = ({ path, component }) => {
+const PrivateRoute: React.FC<{
+  path: string;
+  component: React.FC<any>;
+}> = ({ path, component }) => {
   const { isAuthenticated } = useContext(AuthContext);
 
   return isAuthenticated ? (

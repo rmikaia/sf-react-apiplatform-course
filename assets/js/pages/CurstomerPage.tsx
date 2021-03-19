@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
@@ -11,20 +11,24 @@ import {
   getEditSuccess,
   getGenericError,
 } from "../services/notification";
+import { Customer, CustomerState } from "../types/customer";
 
-const CustomerPage = ({ history, match }) => {
+const CustomerPage: React.FC<RouteComponentProps<{ id: string }>> = ({
+  history,
+  match,
+}) => {
   const entity = "customers";
   const id = match.params.id;
   const isEditing = !isNaN(+id);
 
-  const customerState = {
+  const customerState: Partial<CustomerState> = {
     firstName: "",
     lastName: "",
     email: "",
     company: "",
   };
 
-  const errorsState = {
+  const errorsState: Partial<CustomerState> = {
     firstName: "",
     lastName: "",
     email: "",
@@ -35,8 +39,9 @@ const CustomerPage = ({ history, match }) => {
   const [errors, setErrors] = useState({ ...errorsState });
   const [loading, setLoading] = useState(false);
 
-  /** @param {{currentTarget: HTMLInputElement}} args */
-  const handleChange = ({ currentTarget }) => {
+  const handleChange: (event: { currentTarget: HTMLInputElement }) => void = ({
+    currentTarget,
+  }) => {
     const { name, value } = currentTarget;
     setCustomer({ ...customer, [name]: value });
   };
@@ -56,8 +61,7 @@ const CustomerPage = ({ history, match }) => {
     }
   }, [id, isEditing]);
 
-  /** @param {React.MouseEvent} event */
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.MouseEvent) => {
     event.preventDefault();
 
     let apiResponse;
@@ -88,9 +92,17 @@ const CustomerPage = ({ history, match }) => {
         if (violations) {
           let apiErrors = { ...errorsState };
 
-          violations.forEach(({ propertyPath, message }) => {
-            apiErrors = { ...apiErrors, [propertyPath]: message };
-          });
+          violations.forEach(
+            ({
+              propertyPath,
+              message,
+            }: {
+              propertyPath: string;
+              message: string;
+            }) => {
+              apiErrors = { ...apiErrors, [propertyPath]: message };
+            }
+          );
 
           setErrors(apiErrors);
         }
@@ -106,21 +118,21 @@ const CustomerPage = ({ history, match }) => {
             name="firstName"
             label="Prénom"
             error={errors.firstName}
-            value={customer.firstName}
+            value={customer.firstName!}
             onChange={handleChange}
           />
           <Field
             name="lastName"
             label="Nom"
             error={errors.lastName}
-            value={customer.lastName}
+            value={customer.lastName!}
             onChange={handleChange}
           />
           <Field
             name="email"
             label="Email"
             error={errors.email}
-            value={customer.email}
+            value={customer.email!}
             onChange={handleChange}
             type="email"
           />
@@ -128,7 +140,7 @@ const CustomerPage = ({ history, match }) => {
             name="company"
             label="Entreprise"
             error={errors.company}
-            value={customer.company}
+            value={customer.company!}
             onChange={handleChange}
           />
           <div className="form-group">

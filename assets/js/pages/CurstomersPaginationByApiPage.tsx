@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
+import { Customer } from "../types/customer";
 
 const CurstomersPaginationByApiPage = () => {
   const itemsPerPage = 20;
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
@@ -21,8 +22,7 @@ const CurstomersPaginationByApiPage = () => {
       .catch((error) => console.log(error.response));
   }, [currentPage, itemsPerPage]);
 
-  console.log(customers);
-  const handleDelete = (customerId) => {
+  const handleDelete = (customerId: number) => {
     const oldCustomers = [...customers];
     setCustomers(customers.filter((customer) => customer.id !== customerId));
     axios
@@ -30,7 +30,7 @@ const CurstomersPaginationByApiPage = () => {
       .catch(() => setCustomers(oldCustomers));
   };
 
-  const handlePageChange = (currentPage) => {
+  const handlePageChange = (currentPage: number) => {
     setCurrentPage(currentPage);
   };
 

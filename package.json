@@ -2,8 +2,10 @@
     "devDependencies": {
         "@babel/preset-react": "^7.12.1",
         "@symfony/webpack-encore": "^0.31.0",
+        "@types/jwt-decode": "^3.1.0",
         "core-js": "^3.0.0",
         "regenerator-runtime": "^0.13.2",
+        "ts-loader": "^5.4.5",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -15,7 +17,13 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "axios": "^0.18.1",
+        "@types/jest": "^26.0.21",
+        "@types/node": "^14.14.35",
+        "@types/react": "^17.0.3",
+        "@types/react-dom": "^17.0.2",
+        "@types/react-router-dom": "^5.1.7",
+        "@types/react-toastify": "^4.1.0",
+        "axios": "^0.21.1",
         "dotenv": "^8.2.0",
         "jwt-decode": "^3.0.0",
         "moment": "^2.29.1",
@@ -23,6 +31,7 @@
         "react-content-loader": "^5.1.4",
         "react-dom": "^16.8.6",
         "react-router-dom": "^5.2.0",
-        "react-toastify": "^6.0.9"
+        "react-toastify": "^6.0.9",
+        "typescript": "^4.2.3"
     }
 }

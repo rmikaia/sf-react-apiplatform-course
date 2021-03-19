@@ -1,18 +1,19 @@
 import axios from "axios";
+// @ts-ignore
 import jwtDecode from "jwt-decode";
 import { API_URL } from "../configs/env";
+import { EntityName } from "../types/api";
+import { CommonObject } from "../types/common";
+import { Credentials } from "../types/user";
 
 const encryptedBy = "Bearer";
 
-/** @param {string} token */
-const setAuthHeader = (token) => {
+const setAuthHeader = (token: string) => {
   axios.defaults.headers["Authorization"] = `${encryptedBy} ${token}`;
 };
 
-/** @returns {boolean} */
 const isAuthenticated = () => Boolean(getWorkingToken());
 
-/** @returns {string} */
 const getWorkingToken = () => {
   const token = window.localStorage.getItem("authToken");
 
@@ -40,8 +41,7 @@ const logout = () => {
   delete axios.defaults.headers["Authorization"];
 };
 
-/** @returns {Promise<CreatedUserData>} */
-const auth = (credentials) =>
+const auth = (credentials: Credentials) =>
   axios.post(`${API_URL}login_check`, credentials).then(({ data }) => {
     window.localStorage.setItem("authToken", data.token);
     setAuthHeader(data.token);
@@ -49,45 +49,21 @@ const auth = (credentials) =>
     return data;
   });
 
-/**
- * @param {EntityName} entityName
- * @param {PostedData} data
- * @returns {Promise<CreatedData>}
- */
-const post = (entityName, data) => axios.post(`${API_URL}${entityName}`, data);
+const post = <T extends CommonObject>(entityName: EntityName, data: T) =>
+  axios.post(`${API_URL}${entityName}`, data);
 
-/**
- * @param {EntityName} entityName
- * @param {number} id
- * @param {PostedData} data
- * @returns {Promise<EditedData>}
- */
-const put = (entityName, id, data) =>
+const put = (entityName: EntityName, id: string, data: CommonObject) =>
   axios.put(`${API_URL}${entityName}/${id}`, data);
 
-/**
- * @param {EntityName} entityName
- * @returns {Promise<FetchedData[]>}
- */
-const fetch = (entityName) =>
+const fetch = (entityName: EntityName) =>
   axios
     .get(`${API_URL}${entityName}`)
     .then((response) => response.data["hydra:member"]);
 
-/**
- * @param {EntityName} entityName
- * @param {number} id
- * @returns {Promise<FetchedData>}
- */
-const get = (entityName, id) =>
+const get = (entityName: EntityName, id: string) =>
   axios.get(`${API_URL}${entityName}/${id}`).then((response) => response.data);
 
-/**
- * @param {EntityName} entityName
- * @param {number} id
- * @returns {Promise}
- */
-const deleteItem = (entityName, id) =>
+const deleteItem = (entityName: EntityName, id: number) =>
   axios.delete(`${API_URL}${entityName}/${id}`);
 
 export default {

@@ -7,24 +7,25 @@ import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import { formatDate } from "../services/date";
 import { getDeleteSuccess, getGenericError } from "../services/notification";
+import { Invoice } from "../types/invoice";
 
-const STATUS_CLASS = {
+const STATUS_CLASS: { [T: string]: string } = {
   PAID: "success",
   SENT: "primary",
   CANCELLED: "danger",
 };
 
-const STATUS_LABEL = {
+const STATUS_LABEL: { [T: string]: string } = {
   PAID: "Payée",
   SENT: "Envoyée",
   CANCELLED: "Annulée",
 };
 
-const InvoicesPage = () => {
+const InvoicesPage: React.FC = () => {
   const entity = "invoices";
   const itemsPerPage = 10;
 
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ const InvoicesPage = () => {
       .catch(() => toast.error(getGenericError()));
   }, []);
 
-  const handleDelete = (invoiceId) => {
+  const handleDelete = (invoiceId: number) => {
     const oldInvoices = [...invoices];
 
     setInvoices(invoices.filter((invoice) => invoice.id !== invoiceId));
@@ -52,11 +53,11 @@ const InvoicesPage = () => {
       });
   };
 
-  const handlePageChange = (currentPage) => {
+  const handlePageChange = (currentPage: number) => {
     setCurrentPage(currentPage);
   };
 
-  const handleSearch = ({ target }) => {
+  const handleSearch = ({ target }: { target: HTMLInputElement }) => {
     setSearch(target.value.toLowerCase());
     setCurrentPage(1);
   };
@@ -69,7 +70,7 @@ const InvoicesPage = () => {
       STATUS_LABEL[invoice.status].toLowerCase().includes(search.toLowerCase())
   );
 
-  const paginatedInvoices = Pagination.getData(
+  const paginatedInvoices = Pagination.getData<Invoice>(
     filteredInvoices,
     currentPage,
     itemsPerPage

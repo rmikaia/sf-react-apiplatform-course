@@ -1,17 +1,15 @@
 import React from "react";
+import { InputType } from "../../types/components";
 
-/**
- * @param {{
- *   label: string,
- *   name: string,
- *   onChange: ({currentTarget: HTMLInputElement}) => void,
- *   value: string,
- *   error?: string,
- *   placeholder?: string,
- *   type?: InputType,
- * }} args
- */
-const Field = ({
+const Field: React.FC<{
+  label: string;
+  name: string;
+  onChange: (event: { currentTarget: HTMLInputElement }) => void;
+  value: string;
+  error?: string;
+  placeholder?: string;
+  type?: InputType;
+}> = ({
   label,
   name,
   onChange,

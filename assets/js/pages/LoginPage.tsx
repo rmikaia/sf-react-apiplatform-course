@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
@@ -6,23 +7,23 @@ import ROUTES from "../constantes/routes";
 import AuthContext from "../contexts/AuthContext";
 import api from "../services/api";
 import { getGenericError } from "../services/notification";
+import { Credentials } from "../types/user";
 
-const LoginPage = ({ history }) => {
+const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
   const { setIsAuthenticated } = useContext(AuthContext);
-  const [credentials, setCredentials] = useState({
+  const [credentials, setCredentials] = useState<Credentials>({
     username: "",
     password: "",
   });
 
   const [error, setError] = useState("");
 
-  /** @param {{currentTarget: HTMLInputElement}} args */
-  const handleChange = ({ currentTarget }) => {
+  const handleChange = ({ currentTarget }: { currentTarget: HTMLInputElement }) => {
     const { name, value } = currentTarget;
     setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.MouseEvent) => {
     event.preventDefault();
 
     api

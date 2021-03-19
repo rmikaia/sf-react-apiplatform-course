@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import * as authorImage from "../../images/mika.png";
 import ROUTES from "../constantes/routes";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <div className="d-flex justify-content-between">
       <div className="jumbotron">

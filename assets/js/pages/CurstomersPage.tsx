@@ -6,11 +6,12 @@ import Pagination from "../components/Pagination";
 import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import { getDeleteSuccess, getGenericError } from "../services/notification";
+import { Customer } from "../types/customer";
 
-const CustomersPage = () => {
+const CustomersPage: React.FC = () => {
   const entity = "customers";
   const itemsPerPage = 10;
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -25,8 +26,7 @@ const CustomersPage = () => {
       .catch(() => toast.error(getGenericError()));
   }, []);
 
-  /** @param {number} customerId */
-  const handleDelete = (customerId) => {
+  const handleDelete = (customerId: number) => {
     const oldCustomers = [...customers];
 
     setCustomers(customers.filter((customer) => customer.id !== customerId));
@@ -39,13 +39,15 @@ const CustomersPage = () => {
       });
   };
 
-  /** @param {number} currentPage */
-  const handlePageChange = (currentPage) => {
+  const handlePageChange = (currentPage: number) => {
     setCurrentPage(currentPage);
   };
 
-  /** @param {{currentTarget: HTMLInputElement}} args */
-  const handleSearch = ({ currentTarget }) => {
+  const handleSearch = ({
+    currentTarget,
+  }: {
+    currentTarget: HTMLInputElement;
+  }) => {
     setSearch(currentTarget.value.toLowerCase());
     setCurrentPage(1);
   };
@@ -58,7 +60,7 @@ const CustomersPage = () => {
       (customer.company && customer.company.toLowerCase().includes(search))
   );
 
-  const paginatedCustomers = Pagination.getData(
+  const paginatedCustomers = Pagination.getData<Customer>(
     filteredCustomers,
     currentPage,
     itemsPerPage

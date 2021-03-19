@@ -1,7 +1,7 @@
 import React from "react";
 import ContentLoader from "react-content-loader";
 
-const TableLoader = (props) => (
+const TableLoader: React.FC = (props) => (
   <ContentLoader
     width={1000}
     height={550}

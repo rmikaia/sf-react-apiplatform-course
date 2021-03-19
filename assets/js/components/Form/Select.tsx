@@ -1,16 +1,13 @@
 import React from "react";
 
-/**
- * @param {{
- *   name: string
- *   label: string,
- *   value: string,
- *   onChange: ({ currentTarget: HTMLSelectElement }) => void,
- *   children: any,
- *   error?: string,
- * }} args
- */
-const Select = ({ name, label, value, onChange, children, error = "" }) => {
+const Select: React.FC<{
+  name: string;
+  label: string;
+  value: string;
+  onChange: (event: { currentTarget: HTMLSelectElement }) => void;
+  children: any;
+  error?: string;
+}> = ({ name, label, value, onChange, children, error = "" }) => {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>

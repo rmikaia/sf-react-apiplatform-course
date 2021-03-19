@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../components/Form/Button";
 import Field from "../components/Form/Field";
 import ROUTES from "../constantes/routes";
 import api from "../services/api";
 import { getGenericError } from "../services/notification";
+import { User, UserState } from "../types/user";
 
-const RegisterPage = ({ history, match }) => {
+const RegisterPage: React.FC<RouteComponentProps> = ({ history }) => {
   const entity = "users";
 
-  const userState = {
+  const userState: UserState = {
     email: "",
     firstName: "",
     lastName: "",
@@ -18,7 +19,7 @@ const RegisterPage = ({ history, match }) => {
     passwordConfirm: "",
   };
 
-  const errorsState = {
+  const errorsState: UserState = {
     email: "",
     firstName: "",
     lastName: "",
@@ -29,12 +30,16 @@ const RegisterPage = ({ history, match }) => {
   const [user, setUser] = useState({ ...userState });
   const [errors, setErrors] = useState({ ...errorsState });
 
-  const handleChange = ({ currentTarget }) => {
+  const handleChange = ({
+    currentTarget,
+  }: {
+    currentTarget: HTMLInputElement;
+  }) => {
     const { name, value } = currentTarget;
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.MouseEvent) => {
     event.preventDefault();
 
     let apiErrors = { ...errorsState };
@@ -61,9 +66,17 @@ const RegisterPage = ({ history, match }) => {
         const violations = error.response.data.violations;
 
         if (violations) {
-          violations.forEach(({ propertyPath, message }) => {
-            apiErrors = { ...apiErrors, [propertyPath]: message };
-          });
+          violations.forEach(
+            ({
+              propertyPath,
+              message,
+            }: {
+              propertyPath: string;
+              message: string;
+            }) => {
+              apiErrors = { ...apiErrors, [propertyPath]: message };
+            }
+          );
 
           toast.error(getGenericError());
           setErrors(apiErrors);

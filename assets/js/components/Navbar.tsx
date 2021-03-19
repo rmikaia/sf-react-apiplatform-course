@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import ROUTES from "../constantes/routes";
 import AuthContext from "../contexts/AuthContext";
 import api from "../services/api";
 
-const Navbar = ({ history }) => {
+const Navbar: React.FC<RouteComponentProps> = ({ history }) => {
   const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
   const handleLogout = () => {

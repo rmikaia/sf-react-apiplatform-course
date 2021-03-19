@@ -1,20 +1,17 @@
 import React from "react";
 
-/**
- *
- * @param {{
- *   currentPage: number;
- *   handlePageChange: (currentPage: number) => void;
- *   itemsPerPage : number;
- *   totalItems: number;
- * }} args
- */
-const Pagination = ({
-  totalItems,
-  itemsPerPage,
-  currentPage,
-  handlePageChange,
-}) => {
+const Pagination: React.FC<{
+  currentPage: number;
+  handlePageChange: (currentPage: number) => void;
+  itemsPerPage: number;
+  totalItems: number;
+}> & {
+  getData: <T extends {}>(
+    items: T[],
+    currentPage: number,
+    itemsPerPage: number
+  ) => T[];
+} = ({ totalItems, itemsPerPage, currentPage, handlePageChange }) => {
   const pagesCount = Math.ceil(totalItems / itemsPerPage);
   const pages = [];
 
@@ -68,12 +65,6 @@ const Pagination = ({
   );
 };
 
-/**
- * @param {array} items
- * @param {number} currentPage
- * @param {number} itemsPerPage
- * @returns {array}
- */
 Pagination.getData = (items, currentPage, itemsPerPage) => {
   const start = currentPage * itemsPerPage - itemsPerPage;
   return items.slice(start, start + itemsPerPage);
